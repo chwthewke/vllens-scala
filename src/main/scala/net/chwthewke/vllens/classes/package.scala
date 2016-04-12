@@ -13,6 +13,7 @@ package object classes {
     new Monoid[First[A]] {
       override def empty : First[A] = First( None )
 
-      override def combine( x : First[A], y : First[A] ) : First[A] = x
+      override def combine( x : First[A], y : First[A] ) : First[A] =
+        x.getFirst.fold( y )( _ => x )
     }
 }

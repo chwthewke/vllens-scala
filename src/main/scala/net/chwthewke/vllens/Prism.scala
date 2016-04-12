@@ -1,7 +1,8 @@
 package net.chwthewke.vllens
 
 import cats._
-import net.chwthewke.vllens.classes._
+
+import classes._
 
 abstract class Prism[S, T, A, B] extends Traversal[S, T, A, B] {
 

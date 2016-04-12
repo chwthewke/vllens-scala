@@ -1,4 +1,4 @@
-package net.chwthewke.vllens.net.chwthewke.vllens.classes
+package net.chwthewke.vllens.classes
 
 import cats.data._
 import cats.functor._

@@ -20,8 +20,20 @@ abstract class Fold[S, A] {
 object Fold {
   def folded[F[_] : Foldable, A] : Fold[F[A], A] =
     new Fold[F[A], A] {
-      override def runFold[G[_] : Contravariant : Applicative] : ( A => G[A] ) => ( F[A] => G[F[A]] ) = {
+
+      override def runFold[G[_] : Contravariant : Applicative] : ( A => G[A] ) => ( F[A] => G[F[A]] ) = runFold1[G]
+
+      def runFold1[G[_] : Contravariant : Applicative] : ( A => G[A] ) => ( F[A] => G[F[A]] ) = {
         aga => fa => fa.traverse_[G, A]( aga ).map( _ => fa )
+      }
+
+      def runFold2[G[_] : Contravariant](implicit A: Applicative[G]) : ( A => G[A] ) => F[A] => G[F[A]] = {
+        aga => fa =>
+          fa.foldRight(Eval.always(A.pure(fa))) { (a, lgfa) =>
+            lgfa.map(gfa => aga(a).map2(gfa)((_, b) => b))
+          }
+
+          ???
       }
     }
 }

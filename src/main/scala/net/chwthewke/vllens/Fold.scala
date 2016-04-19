@@ -18,6 +18,8 @@ abstract class Fold[S, A] {
 
   // TODO lazy
   def preview( s : S ) : Option[A] = foldMap[First[A]]( ( a : A ) => First( a.some ) ).apply( s ).getFirst
+
+  def preview2( s : S ) : Option[A] = ???
 }
 
 object Fold {

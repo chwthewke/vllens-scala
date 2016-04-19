@@ -3,12 +3,32 @@ package net.chwthewke.vllens
 import cats._
 import cats.data._
 import cats.std.list._
-import org.scalatest.{ Matchers, WordSpec }
+import org.scalactic.TypeCheckedTripleEquals
+import org.scalatest.Matchers
+import org.scalatest.WordSpec
 import scala.collection.{ mutable => scm }
 
-class FoldSpec extends WordSpec with Matchers {
+class FoldSpec extends WordSpec with Matchers with TypeCheckedTripleEquals {
 
   import FoldSpec._
+
+  "getting a foldRight to stop evaluating" should {
+    "work?" in {
+      val rec = RecFoldable( List( 1, 2, 3 ) )
+
+      def f( a : Int, b : Eval[Int] ) : Eval[Int] = if ( a >= 2 ) Eval.now( a ) else b
+
+      val F = implicitly[Foldable[RecFoldable[List, ?]]]
+
+      F.foldRight( rec, Eval.always( 0 ) )( f _ ).value should ===( 2 )
+
+      rec.evals.toList should ===( List( 1, 2 ) )
+    }
+
+    "and with First as well?" in {
+      pending
+    }
+  }
 
   "getting the first of a list" should {
     "evaluate the head only" in {
